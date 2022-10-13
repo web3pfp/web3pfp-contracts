@@ -50,7 +50,6 @@ contract Web3PFP is ERC721URIStorage, Ownable {
 
     function mintNFT(address recipient, string memory tokenURI, uint256 amount, address tokenAddress)
     public
-    payable
     returns (uint256)
     {
         _tokenIds.increment();
@@ -80,7 +79,6 @@ contract Web3PFP is ERC721URIStorage, Ownable {
 
     function updateNFT(address tokenAddress, uint256 amount)
     public
-    payable
     returns (uint256)
     {
         uint8 decimals = non_standard_IERC20(tokenAddress).decimals();
@@ -101,11 +99,9 @@ contract Web3PFP is ERC721URIStorage, Ownable {
         return itemId;
     }
 
-    function transferERC20(address tokenAddress, uint256 amount) payable external onlyOwner {
+    function withdraw(address tokenAddress, uint256 amount) external onlyOwner {
 
         IERC20 token = IERC20(tokenAddress);
-
-        require(msg.sender == _owner, "Only owner can withdraw funds");
 
         uint256 erc20balance = token.balanceOf(address(this));
         require(amount <= erc20balance, "balance is low");

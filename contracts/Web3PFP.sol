@@ -6,7 +6,6 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "hardhat/console.sol";
 
 interface non_standard_IERC20 {
     function transferFrom(
@@ -53,12 +52,9 @@ contract Web3PFP is ERC721URIStorage, Ownable {
     returns (uint256)
     {
         _tokenIds.increment();
-        console.log('MINT_AMOUNT', MINT_AMOUNT);
 
         uint decimals = non_standard_IERC20(tokenAddress).decimals();
-        console.log('amount', amount);
         uint price = (MINT_AMOUNT * (10 ** decimals)) / 10;
-        console.log('price', price);
 
         require(_tokenIds.current() > 0 && _tokenIds.current() < 21000, "Exceeds token supply");
         require(IERC20(tokenAddress).allowance(msg.sender, address(this)) >= price, "not approved");
@@ -72,7 +68,6 @@ contract Web3PFP is ERC721URIStorage, Ownable {
         uint256 newItemId = _tokenIds.current();
         _mint(recipient, newItemId);
         _setTokenURI(newItemId, tokenURI);
-        console.log('newItemId', newItemId);
         emit NFTCreated(msg.sender, newItemId);
         return newItemId;
     }
@@ -84,9 +79,6 @@ contract Web3PFP is ERC721URIStorage, Ownable {
         uint8 decimals = non_standard_IERC20(tokenAddress).decimals();
         uint price = (UPDATE_AMOUNT * (10 ** decimals)) / 10;
 
-        console.log('amount', amount);
-        console.log('price', price);
-        console.log('UPDATE_AMOUNT', UPDATE_AMOUNT);
         require(IERC20(tokenAddress).allowance(msg.sender, address(this)) >= price, "not approved");
 
         non_standard_IERC20(tokenAddress).transferFrom(
@@ -119,6 +111,6 @@ contract Web3PFP is ERC721URIStorage, Ownable {
     }
 
     function _baseURI() internal view virtual override returns (string memory) {
-        return "https://ipfs.pragmaticdlt.com/ipns/";
+        return "ipns://";
     }
 }

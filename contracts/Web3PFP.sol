@@ -37,14 +37,25 @@ contract Web3PFP is ERC721URIStorage, Ownable {
     event TransferSent(address _from, uint _amount);
 
     uint256 public MINT_AMOUNT = 30;
-    uint256 public UPDATE_AMOUNT = 3;
+    uint256 public UPDATE_INFO_AMOUNT = 5;
+    uint256 public UPDATE_PHOTO_AMOUNT = 3;
+    uint256 public PRICE_DECIMALS = 1;
 
     function changeMintAmount(uint256 value) public onlyOwner isOwner() {
         MINT_AMOUNT = value;
     }
 
-    function changeUpdateAmount(uint256 value) public onlyOwner isOwner() {
-        UPDATE_AMOUNT = value;
+    function changeUpdateInfoAmount(uint256 value) public onlyOwner isOwner() {
+        UPDATE_INFO_AMOUNT = value;
+    }
+
+    function changeUpdatePhotoAmount(uint256 value) public onlyOwner isOwner() {
+        UPDATE_PHOTO_AMOUNT = value;
+    }
+
+    function changePriceDecimals(uint8 decimals) public onlyOwner isOwner() {
+        require(decimals > 0, "cannot be less then 1");
+        PRICE_DECIMALS = decimals;
     }
 
     function mintNFT(address recipient, string memory tokenURI, uint256 amount, address tokenAddress)
@@ -54,7 +65,7 @@ contract Web3PFP is ERC721URIStorage, Ownable {
         _tokenIds.increment();
 
         uint decimals = non_standard_IERC20(tokenAddress).decimals();
-        uint price = (MINT_AMOUNT * (10 ** decimals)) / 10;
+        uint price = (MINT_AMOUNT * (10 ** decimals)) / (10 ** PRICE_DECIMALS);
 
         require(_tokenIds.current() > 0 && _tokenIds.current() < 21000, "Exceeds token supply");
         require(IERC20(tokenAddress).allowance(msg.sender, address(this)) >= price, "not approved");
@@ -72,12 +83,31 @@ contract Web3PFP is ERC721URIStorage, Ownable {
         return newItemId;
     }
 
-    function updateNFT(address tokenAddress, uint256 amount)
+    function updatePhoto(address tokenAddress, uint256 amount)
     public
     returns (uint256)
     {
         uint8 decimals = non_standard_IERC20(tokenAddress).decimals();
-        uint price = (UPDATE_AMOUNT * (10 ** decimals)) / 10;
+        uint price = (UPDATE_PHOTO_AMOUNT * (10 ** decimals)) / (10 ** PRICE_DECIMALS);
+
+        require(IERC20(tokenAddress).allowance(msg.sender, address(this)) >= price, "not approved");
+
+        non_standard_IERC20(tokenAddress).transferFrom(
+            msg.sender,
+            address(this),
+            amount
+        );
+        uint256 itemId = _tokenIds.current();
+        emit NFTUpdated(msg.sender, itemId);
+        return itemId;
+    }
+
+    function updateInfo(address tokenAddress, uint256 amount)
+    public
+    returns (uint256)
+    {
+        uint8 decimals = non_standard_IERC20(tokenAddress).decimals();
+        uint price = (UPDATE_INFO_AMOUNT * (10 ** decimals)) / (10 ** PRICE_DECIMALS);
 
         require(IERC20(tokenAddress).allowance(msg.sender, address(this)) >= price, "not approved");
 

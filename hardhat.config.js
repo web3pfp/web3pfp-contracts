@@ -10,6 +10,10 @@ module.exports = {
       url: `https://ropsten.infura.io/v3/${process.env.ROPSTEN_LINK_KEY}`,
       accounts: [process.env.PRIVATE_KEY_MAIN]
     },
+    goerli: {
+      url: `https://goerli.infura.io/v3/${process.env.GOERLI_LINK_KEY}`,
+      accounts: [process.env.PRIVATE_KEY_MAIN],
+    },
     mumbai: {
       url: `https://polygon-mumbai.g.alchemy.com/v2/${process.env.MUMBAI_LINK_KEY}`,
       accounts: [process.env.PRIVATE_KEY_MAIN],
@@ -22,6 +26,7 @@ module.exports = {
   etherscan: {
     apiKey: {
       ropsten: process.env.ETHERSCAN_API_KEY,
+      goerli: process.env.ETHERSCAN_API_KEY,
       customChains: [
         {
           network: "rinkeby",

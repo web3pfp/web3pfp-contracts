@@ -141,6 +141,6 @@ contract Web3PFP is ERC721URIStorage, Ownable {
     }
 
     function _baseURI() internal view virtual override returns (string memory) {
-        return "ipns://";
+        return "";
     }
 }

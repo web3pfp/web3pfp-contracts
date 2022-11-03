@@ -3,7 +3,7 @@ require('@nomiclabs/hardhat-etherscan');
 
 async function main() {
     await hre.run('verify:verify', {
-        address: "0x2c699AE45cBfA9a6b5c5dd7Ec51051b491e56C73",
+        address: "0x23F7391cdAaE4A16A95A2619A536d920781B51Bd",
         constructorArguments: [],
     });
 }
